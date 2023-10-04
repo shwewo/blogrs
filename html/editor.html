@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <title>Markdown Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html,
+    body {
+      background: #181a1b;
+      font-family: monospace;
+      scrollbar-width: none;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      /* for webkit-based browsers */
+      -moz-osx-font-smoothing: grayscale;
+      /* for macOS */
+      font-smooth: always;
+      /* for other operating systems */
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    #editorInput,
+    #lineCounter {
+      margin: 0;
+      resize: none;
+      font-size: 16px;
+      box-sizing: border-box;
+      border: none;
+    }
+
+    #editorInput {
+      position: absolute;
+      width: 60vw;
+      color: #ffffff;
+      background-color: transparent;
+      box-sizing: border-box;
+      height: 93vh;
+      font-size: 16px;
+      user-select: none;
+      scrollbar-width: none;
+      margin-top: 32px;
+      margin-left: 70px;
+    }
+
+    #lineCounter {
+      height: 93vh;
+      display: flex;
+      border-color: transparent;
+      overflow-y: hidden;
+      text-align: right;
+      box-shadow: none;
+      color: #707070;
+      background-color: transparent;
+      position: absolute;
+      margin-top: 32px;
+      margin-left: 30px;
+      width: 2.7rem;
+      user-select: 0;
+    }
+
+    #editorInput:focus {
+      outline: none;
+    }
+
+    #boymoder {
+      position: fixed;
+      right: 6.5%;
+      max-width: 30%;
+      bottom: 0;
+      margin: 0;
+    }
+
+    #post {
+      border: none;
+      font-family: monospace;
+      background-color: transparent;
+      padding: 0;
+      top: 0;
+      right: 0;
+      position: absolute;
+      margin-top: 30px;
+      margin-right: 30px;
+      color: white;
+      font-size: 24px;
+    }
+
+    #post:hover {
+      /* opacity: 0.8; */
+      cursor: pointer;
+    }
+
+    @keyframes blink {
+      0% {
+        transform: translateX(-70vw);
+      }
+
+      50% {
+        transform: translateX(-50px);
+      }
+
+      70% {
+        transform: translatex(-50vw);
+      }
+
+      100% {
+        transform: translateX(0);
+
+      }
+    }
+
+    @media screen and (max-width: 1080px) {
+      /* #lineCounter {
+        width: 1rem;
+        font-size: 48px;
+        border-bottom: 3px solid #181a1b;
+      }
+
+      #editorInput {
+        font-size: 48px;
+        border-left: none;
+        border-right: none;
+      }
+
+      #editorInput {
+        border-bottom: 3px solid #4d4b4b;
+        width: 100vw;
+        padding-left: 48px;
+      } */
+    }
+  </style>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+</head>
+
+<body>
+  <button onclick="sendData()" id="post">*</button>
+  <textarea id='lineCounter' wrap='off' readonly>1.</textarea>
+  <textarea id='editorInput' wrap='off'></textarea>
+  <img id="boymoder" src="boymoder.png" alt="Boymoder">
+  <script>
+    const editorInput = document.getElementById('editorInput');
+    const lineCounter = document.getElementById('lineCounter');
+
+    let lineCountCache = 0;
+
+    function sendData() {
+      const data = document.getElementById("editorInput").value.trim();
+
+      if (!data) {
+        alert("Please enter some valid data");
+        return;
+      }
+
+      let xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "blog_post", true);
+      xhttp.setRequestHeader("Content-type", "text/plain");
+      xhttp.onload = function () {
+        if (xhttp.status >= 200 && xhttp.status < 300) {
+          window.location.href = "/";
+        } else {
+          alert("You fucked up: " + xhttp.statusText);
+        }
+      };
+      xhttp.send(data);
+    }
+
+    function line_counter() {
+      let lineCount = editorInput.value.split('\n').length;
+      let outarr = new Array();
+      if (lineCountCache != lineCount) {
+        for (let x = 0; x < lineCount; x++) {
+          outarr[x] = (x + 1) + '.';
+        }
+        lineCounter.value = outarr.join('\n');
+      }
+      lineCountCache = lineCount;
+    }
+
+    editorInput.addEventListener('scroll', () => {
+      lineCounter.scrollTop = editorInput.scrollTop;
+      lineCounter.scrollLeft = editorInput.scrollLeft;
+    });
+
+    editorInput.addEventListener('input', () => {
+      localStorage.setItem("markdownEditorContent", editorInput.value);
+      line_counter();
+    });
+
+    editorInput.addEventListener('keydown', (e) => {
+      let { keyCode } = e;
+      let { value, selectionStart, selectionEnd } = editorInput;
+
+      if (keyCode === 9) {  // TAB = 9
+        e.preventDefault();
+        editorInput.value = value.slice(0, selectionStart) + '\t' + value.slice(selectionEnd);
+        editorInput.setSelectionRange(selectionStart + 2, selectionStart + 1)
+      }
+    });
+
+    const savedContent = localStorage.getItem("markdownEditorContent");
+    if (savedContent) {
+      editorInput.value = savedContent;
+    } else {
+      const date = new Date().toISOString().slice(0, 10);
+      editorInput.value = `example-title ${date} short description\n`;
+    }
+    line_counter();
+  </script>
+</body>
+
+</html>

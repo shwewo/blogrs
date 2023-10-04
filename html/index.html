@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>awwwwwww</title>
+    <link rel="icon" href="./favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <meta name="color-scheme" content="dark">
+  </head>
+  <body>
+    <div id="blog">
+      <div id="about">
+        <img src="avatar.png" alt="pfp" id="avatar" width="120">
+        <p id="nickname"><b>localhost:8080</b></p>
+        <p class="text">Discord not exists</p>
+        <p class="text">Sad and self-taught</p>
+        <p class="text">Transfem non-binary</p>
+        <p class="text">Living in Moscow</p>
+      </div>
+      <div id="line"></div>
+      <div id="posts">
+        <!-- BLOG_POSTS -->
+        <!-- <div class="post">
+          <a href="http://localhost:8787/post/cloudflare-workers">
+            <strong>
+              About cloudflare workers
+            </strong>
+          </a>
+          <p class="date">May 2023</p>
+        </div> -->
+      </div>
+    </div>
+    <!-- <iframe src="http://localhost:9999/editor.html" frameborder="0" style="border:0; width:600%; height: 300px;"></iframe> -->
+    <img id="boymoder" src="boymoder.png" alt="Boymoder">
+    <div id="resources">
+      <a href="https://localhost:8080/editor.html">*</a>
+    </div>
+    <script>
+        const head = document.querySelector('head');
+
+        function handleMutation() {
+          const darkreaderSelector = 'meta[name="darkreader"]';
+          if (head.querySelector(darkreaderSelector)) {
+            document.body.style.background = "none";
+          };
+        };
+
+        handleMutation();
+        
+        new MutationObserver(handleMutation).observe(head, { childList: true });
+    </script>
+  </body>
+</html>

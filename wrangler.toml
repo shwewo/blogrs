@@ -1,0 +1,13 @@
+name = "blogrs"
+main = "build/worker/shim.mjs"
+compatibility_date = "2022-01-20"
+
+kv_namespaces = [
+  { binding = "BLOG_POSTS", id = "e619482f39ce459599f51b1eaf5be9a9", preview_id = "b12e2b9700ba4a39b3a8c84033e3031b" }
+]
+
+[vars]
+WORKERS_RS_VERSION = "0.0.11"
+
+[build]
+command = "cargo install --git https://github.com/CathalMullan/workers-rs worker-build && worker-build --release"
